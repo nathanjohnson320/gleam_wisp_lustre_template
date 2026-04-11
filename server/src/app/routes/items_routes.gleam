@@ -28,7 +28,7 @@ pub fn post_create_item(req: Request, ctx: Context) {
   use json <- wisp.require_json(req)
 
   let result = {
-    use item <- result.try(decode.run(json, item.item_decoder()))
+    use item <- result.try(decode.run(json, item.item_create_decoder()))
 
     sql.items_insert(
       ctx.repo(),
@@ -92,7 +92,7 @@ pub fn patch_item(req: Request, ctx: Context, item_id: String) {
   use json <- wisp.require_json(req)
 
   let result = {
-    use item <- result.try(decode.run(json, item.item_decoder()))
+    use item <- result.try(decode.run(json, item.item_create_decoder()))
 
     sql.items_update(
       ctx.repo(),

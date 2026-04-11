@@ -1,5 +1,6 @@
 import gleam/dynamic/decode
 import gleam/json
+import gleam/time/duration
 import gleam/time/timestamp
 
 pub type ItemStatus {
@@ -74,6 +75,14 @@ pub fn item_encoder(item: Item) -> json.Json {
     #("id", json.string(item.id)),
     #("title", json.string(item.title)),
     #("status", json.string(item_status_to_string(item.status))),
+    #(
+      "inserted_at",
+      json.string(timestamp.to_rfc3339(item.inserted_at, duration.seconds(0))),
+    ),
+    #(
+      "updated_at",
+      json.string(timestamp.to_rfc3339(item.updated_at, duration.seconds(0))),
+    ),
   ])
 }
 
@@ -85,6 +94,23 @@ pub fn item_decoder() -> decode.Decoder(Item) {
   use updated_at <- decode.field("updated_at", timestamp_decoder())
 
   decode.success(Item(id:, title:, status:, inserted_at:, updated_at:))
+}
+
+pub fn item_create_decoder() -> decode.Decoder(Item) {
+  use id <- decode.field("id", decode.string)
+  use title <- decode.field("title", decode.string)
+  use status <- decode.field("status", status_decoder())
+  // For creation, we don't have timestamps yet, so we use a default or placeholder
+  // but since the decoder must return an Item, we'll use a placeholder
+  // and the server will overwrite it with real data from the DB.
+  let now = timestamp.system_time()
+  decode.success(Item(
+    id: id,
+    title: title,
+    status: status,
+    inserted_at: now,
+    updated_at: now,
+  ))
 }
 
 pub fn status_decoder() -> decode.Decoder(ItemStatus) {

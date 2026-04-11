@@ -133,7 +133,10 @@ fn todos(model: Model) -> Element(Msg) {
         model.items
           |> list.map(item),
       ),
-      todos_empty(),
+      case model.items == [] {
+        True -> todos_empty()
+        False -> div([], [])
+      },
     ]),
   ])
 }

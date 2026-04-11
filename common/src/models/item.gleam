@@ -1,5 +1,6 @@
 import gleam/dynamic/decode
 import gleam/json
+import gleam/time/timestamp
 
 pub type ItemStatus {
   Completed
@@ -7,11 +8,24 @@ pub type ItemStatus {
 }
 
 pub type Item {
-  Item(id: String, title: String, status: ItemStatus)
+  Item(
+    id: String,
+    title: String,
+    status: ItemStatus,
+    inserted_at: timestamp.Timestamp,
+    updated_at: timestamp.Timestamp,
+  )
 }
 
 pub fn default() -> Item {
-  Item(id: "", title: "", status: Uncompleted)
+  let now = timestamp.system_time()
+  Item(
+    id: "",
+    title: "",
+    status: Uncompleted,
+    inserted_at: now,
+    updated_at: now,
+  )
 }
 
 pub fn toggle_todo(item: Item) -> Item {
@@ -67,8 +81,10 @@ pub fn item_decoder() -> decode.Decoder(Item) {
   use id <- decode.field("id", decode.string)
   use title <- decode.field("title", decode.string)
   use status <- decode.field("status", status_decoder())
+  use inserted_at <- decode.field("inserted_at", timestamp_decoder())
+  use updated_at <- decode.field("updated_at", timestamp_decoder())
 
-  decode.success(Item(id:, title:, status:))
+  decode.success(Item(id:, title:, status:, inserted_at:, updated_at:))
 }
 
 pub fn status_decoder() -> decode.Decoder(ItemStatus) {
@@ -79,5 +95,14 @@ pub fn status_decoder() -> decode.Decoder(ItemStatus) {
     "uncomplete" -> decode.success(Uncompleted)
     "uncompleted" -> decode.success(Uncompleted)
     _ -> decode.failure(Uncompleted, "Invalid status")
+  }
+}
+
+pub fn timestamp_decoder() -> decode.Decoder(timestamp.Timestamp) {
+  use decoded_string <- decode.then(decode.string)
+
+  case timestamp.parse_rfc3339(decoded_string) {
+    Ok(ts) -> decode.success(ts)
+    Error(_) -> decode.failure(timestamp.system_time(), "Invalid timestamp")
   }
 }

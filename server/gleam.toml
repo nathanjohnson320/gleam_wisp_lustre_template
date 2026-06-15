@@ -11,10 +11,10 @@ description = "Server for the project"
 
 [dependencies]
 common = { path = "../common" }
-gleam_stdlib = "~> 0.68"
+gleam_stdlib = "~> 1.0"
 wisp = "~> 2.1"
 lustre = "~> 5.3"
-mist = "~> 5.0"
+mist = "~> 6.0"
 gleam_http = "~> 4.1"
 gleam_erlang = "~> 1.2"
 dot_env = "~> 1.0"

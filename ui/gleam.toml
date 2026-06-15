@@ -15,7 +15,7 @@ target = "javascript"
 
 [dependencies]
 common = { path = "../common" }
-gleam_stdlib = "~> 0.68"
+gleam_stdlib = "~> 1.0"
 lustre = ">= 5.0.0 and < 6.0.0"
 modem = "~> 2.1"
 gleam_json = ">= 3.0.0 and < 4.0.0"

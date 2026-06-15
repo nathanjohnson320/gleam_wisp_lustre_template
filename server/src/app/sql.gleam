@@ -1,26 +1,33 @@
 //// This module contains the code to run the sql queries defined in
 //// `./src/app/sql`.
-//// > 🐿️ This module was generated automatically using v4.5.0 of
+//// > 🐿️ This module was generated automatically using v4.6.0 of
 //// > the [squirrel package](https://github.com/giacomocavalieri/squirrel).
 ////
 
 import gleam/dynamic/decode
+import gleam/time/timestamp.{type Timestamp}
 import pog
 
 /// A row you get from running the `items_delete` query
 /// defined in `./src/app/sql/items_delete.sql`.
 ///
-/// > 🐿️ This type definition was generated automatically using v4.5.0 of the
+/// > 🐿️ This type definition was generated automatically using v4.6.0 of the
 /// > [squirrel package](https://github.com/giacomocavalieri/squirrel).
 ///
 pub type ItemsDeleteRow {
-  ItemsDeleteRow(id: String, title: String, status: String)
+  ItemsDeleteRow(
+    id: String,
+    title: String,
+    status: String,
+    inserted_at: Timestamp,
+    updated_at: Timestamp,
+  )
 }
 
 /// Runs the `items_delete` query
 /// defined in `./src/app/sql/items_delete.sql`.
 ///
-/// > 🐿️ This function was generated automatically using v4.5.0 of
+/// > 🐿️ This function was generated automatically using v4.6.0 of
 /// > the [squirrel package](https://github.com/giacomocavalieri/squirrel).
 ///
 pub fn items_delete(
@@ -31,7 +38,15 @@ pub fn items_delete(
     use id <- decode.field(0, decode.string)
     use title <- decode.field(1, decode.string)
     use status <- decode.field(2, decode.string)
-    decode.success(ItemsDeleteRow(id:, title:, status:))
+    use inserted_at <- decode.field(3, pog.timestamp_decoder())
+    use updated_at <- decode.field(4, pog.timestamp_decoder())
+    decode.success(ItemsDeleteRow(
+      id:,
+      title:,
+      status:,
+      inserted_at:,
+      updated_at:,
+    ))
   }
 
   "DELETE FROM items
@@ -46,17 +61,23 @@ RETURNING *;"
 /// A row you get from running the `items_insert` query
 /// defined in `./src/app/sql/items_insert.sql`.
 ///
-/// > 🐿️ This type definition was generated automatically using v4.5.0 of the
+/// > 🐿️ This type definition was generated automatically using v4.6.0 of the
 /// > [squirrel package](https://github.com/giacomocavalieri/squirrel).
 ///
 pub type ItemsInsertRow {
-  ItemsInsertRow(id: String, title: String, status: String)
+  ItemsInsertRow(
+    id: String,
+    title: String,
+    status: String,
+    inserted_at: Timestamp,
+    updated_at: Timestamp,
+  )
 }
 
 /// Runs the `items_insert` query
 /// defined in `./src/app/sql/items_insert.sql`.
 ///
-/// > 🐿️ This function was generated automatically using v4.5.0 of
+/// > 🐿️ This function was generated automatically using v4.6.0 of
 /// > the [squirrel package](https://github.com/giacomocavalieri/squirrel).
 ///
 pub fn items_insert(
@@ -69,11 +90,19 @@ pub fn items_insert(
     use id <- decode.field(0, decode.string)
     use title <- decode.field(1, decode.string)
     use status <- decode.field(2, decode.string)
-    decode.success(ItemsInsertRow(id:, title:, status:))
+    use inserted_at <- decode.field(3, pog.timestamp_decoder())
+    use updated_at <- decode.field(4, pog.timestamp_decoder())
+    decode.success(ItemsInsertRow(
+      id:,
+      title:,
+      status:,
+      inserted_at:,
+      updated_at:,
+    ))
   }
 
-  "INSERT INTO items (id, title, status)
-VALUES ($1, $2, $3)
+  "INSERT INTO items (id, title, status, inserted_at, updated_at)
+VALUES ($1, $2, $3, NOW(), NOW())
 RETURNING *;"
   |> pog.query
   |> pog.parameter(pog.text(arg_1))
@@ -86,17 +115,23 @@ RETURNING *;"
 /// A row you get from running the `items_list` query
 /// defined in `./src/app/sql/items_list.sql`.
 ///
-/// > 🐿️ This type definition was generated automatically using v4.5.0 of the
+/// > 🐿️ This type definition was generated automatically using v4.6.0 of the
 /// > [squirrel package](https://github.com/giacomocavalieri/squirrel).
 ///
 pub type ItemsListRow {
-  ItemsListRow(id: String, title: String, status: String)
+  ItemsListRow(
+    id: String,
+    title: String,
+    status: String,
+    inserted_at: Timestamp,
+    updated_at: Timestamp,
+  )
 }
 
 /// Runs the `items_list` query
 /// defined in `./src/app/sql/items_list.sql`.
 ///
-/// > 🐿️ This function was generated automatically using v4.5.0 of
+/// > 🐿️ This function was generated automatically using v4.6.0 of
 /// > the [squirrel package](https://github.com/giacomocavalieri/squirrel).
 ///
 pub fn items_list(
@@ -106,7 +141,9 @@ pub fn items_list(
     use id <- decode.field(0, decode.string)
     use title <- decode.field(1, decode.string)
     use status <- decode.field(2, decode.string)
-    decode.success(ItemsListRow(id:, title:, status:))
+    use inserted_at <- decode.field(3, pog.timestamp_decoder())
+    use updated_at <- decode.field(4, pog.timestamp_decoder())
+    decode.success(ItemsListRow(id:, title:, status:, inserted_at:, updated_at:))
   }
 
   "SELECT *
@@ -119,17 +156,23 @@ FROM items;"
 /// A row you get from running the `items_update` query
 /// defined in `./src/app/sql/items_update.sql`.
 ///
-/// > 🐿️ This type definition was generated automatically using v4.5.0 of the
+/// > 🐿️ This type definition was generated automatically using v4.6.0 of the
 /// > [squirrel package](https://github.com/giacomocavalieri/squirrel).
 ///
 pub type ItemsUpdateRow {
-  ItemsUpdateRow(id: String, title: String, status: String)
+  ItemsUpdateRow(
+    id: String,
+    title: String,
+    status: String,
+    inserted_at: Timestamp,
+    updated_at: Timestamp,
+  )
 }
 
 /// Runs the `items_update` query
 /// defined in `./src/app/sql/items_update.sql`.
 ///
-/// > 🐿️ This function was generated automatically using v4.5.0 of
+/// > 🐿️ This function was generated automatically using v4.6.0 of
 /// > the [squirrel package](https://github.com/giacomocavalieri/squirrel).
 ///
 pub fn items_update(
@@ -142,12 +185,21 @@ pub fn items_update(
     use id <- decode.field(0, decode.string)
     use title <- decode.field(1, decode.string)
     use status <- decode.field(2, decode.string)
-    decode.success(ItemsUpdateRow(id:, title:, status:))
+    use inserted_at <- decode.field(3, pog.timestamp_decoder())
+    use updated_at <- decode.field(4, pog.timestamp_decoder())
+    decode.success(ItemsUpdateRow(
+      id:,
+      title:,
+      status:,
+      inserted_at:,
+      updated_at:,
+    ))
   }
 
   "UPDATE items
 SET title = $1,
-    status = $2
+    status = $2,
+    updated_at = NOW()
 WHERE id = $3
 RETURNING *;"
   |> pog.query

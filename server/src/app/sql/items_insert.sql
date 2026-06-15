@@ -1,3 +1,3 @@
-INSERT INTO items (id, title, status)
-VALUES ($1, $2, $3)
+INSERT INTO items (id, title, status, inserted_at, updated_at)
+VALUES ($1, $2, $3, NOW(), NOW())
 RETURNING *;
